@@ -24,13 +24,13 @@ def getVersionName = {
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.3'
+//        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+//        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:3.0.3'
     }
 }
 
@@ -43,7 +43,7 @@ allprojects {
     group = "org.altbeacon"
 
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -139,6 +139,20 @@ task renameAarForRelease(type: Copy, dependsOn: build) {
     }
 }
 
+task renameJarForRelease(type: Copy, dependsOn: assembleRelease) {
+    description = "Rename the jar for easy release publishing"
+    mkdir "$buildDir/outputs/jar/"
+        from("$buildDir/intermediates/bundles/release/") // classes.jar
+        into("$buildDir/outputs/jar/" 		   ) // ${project.name}-${project.version}.jar"
+        include('classes.jar')
+        rename { String fileName ->
+            fileName = "${project.name}-${project.version}.jar"
+        }
+    doLast {
+        println ">>> Release: $buildDir/outputs/jar/${project.name}-${project.version}.jar"
+    }
+}
+
 task distribution(dependsOn: [bundleEclipse, build, clean, renameAarForRelease]) << {
     println "Building with version=$version"
 }
@@ -146,6 +160,16 @@ task distribution(dependsOn: [bundleEclipse, build, clean, renameAarForRelease])
 task release(dependsOn: 'distribution') << {
     println('Doing release build')
 }
+
+task buildReleaseJar(dependsOn: [clean, assembleRelease, renameJarForRelease]) {
+    if (isSnapshot) {
+        println("Must invoke with: ./gradlew -Prelease buildReleaseJar")
+	throw new GradleException("Must invoke as: ./gradlew -Prelease buildReleaseJar")
+    }
+    println('Doing release build for JAR')
+}
+
+assembleRelease.mustRunAfter clean
 
 android.libraryVariants.all { variant ->
 
@@ -168,10 +192,10 @@ build.mustRunAfter clean
 apply from: 'gradle/credentials.gradle'
 apply from: 'gradle/compile.gradle'
 apply from: 'gradle/publishing.gradle'
-apply from: 'gradle/bintray.gradle'
-apply from: 'gradle/artifactory.gradle'
-
-artifactoryPublish {
-    // Skip deploying to artifactory if building a pull request
-    onlyIf { !isSnapPullRequest }
-}
+//apply from: 'gradle/bintray.gradle'
+//apply from: 'gradle/artifactory.gradle'
+//
+//artifactoryPublish {
+//    // Skip deploying to artifactory if building a pull request
+//    onlyIf { !isSnapPullRequest }
+//}

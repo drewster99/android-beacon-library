@@ -330,7 +330,11 @@ public abstract class CycledLeScanner {
             //intent.setFlags(Intent.FLAG_UPDATE_CURRENT);
             wakeupIntent.setClassName(mContext, StartupBroadcastReceiver.class.getName());
             wakeupIntent.putExtra("wakeup", true);
-            mWakeUpOperation = PendingIntent.getBroadcast(mContext, 0, wakeupIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+            if (Build.VERSION.SDK_INT >= 31 /* Build.VERSION_CODES.S */) {
+                flags = flags | PendingIntent.FLAG_IMMUTABLE;
+            }
+            mWakeUpOperation = PendingIntent.getBroadcast(mContext, 0, wakeupIntent, flags);
         }
         return mWakeUpOperation;
     }
