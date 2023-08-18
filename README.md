@@ -1,6 +1,16 @@
 Android Beacon Library
 =======================
 
+
+Building from command line:
+
+    ./gradlew clean
+    ./gradlew android-beacon-library:assembleRelease
+
+    Resulting jar can be found in:
+
+    ./lib/build/intermediates/aar_main_jar/release/classes.jar
+
 [![Build Status](https://snap-ci.com/AltBeacon/android-beacon-library/branch/master/build_image)](https://snap-ci.com/AltBeacon/android-beacon-library/branch/master)
 
 An Android library providing APIs to interact with beacons.  Please visit the
