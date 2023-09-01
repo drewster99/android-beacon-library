@@ -11,6 +11,9 @@ Building from command line:
 
     ./lib/build/intermediates/aar_main_jar/release/classes.jar
 
+    Additional build notes can be found here:
+    [https://docs.google.com/document/d/1YyoJkarx30G5UroQh6QU8CNFset-SdJr3OASxDZ2tMY/edit](https://docs.google.com/document/d/1YyoJkarx30G5UroQh6QU8CNFset-SdJr3OASxDZ2tMY)
+
 [![Build Status](https://snap-ci.com/AltBeacon/android-beacon-library/branch/master/build_image)](https://snap-ci.com/AltBeacon/android-beacon-library/branch/master)
 
 An Android library providing APIs to interact with beacons.  Please visit the
